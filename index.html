@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Wedding of Romeo & Juliet</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #332128;
+            color: #f7f2eb;
+            overflow-x: hidden;
+        }
+        .font-serif-custom {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        /* Latar Belakang Utama: Gradasi Campuran 50/50 (Pink Terang & Matcha Lembut) */
+        .bg-mixed-palette {
+            background: linear-gradient(135deg, #2c3832 0%, #752848 50%, #26332b 100%);
+        }
+        
+        /* SEMUA GRID/CARD MENGGUNAKAN CAMPURAN WARNA (Blended Gradient Card) */
+        .card-mixed-blend {
+            background: linear-gradient(135deg, rgba(105, 38, 65, 0.88) 0%, rgba(45, 61, 51, 0.88) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(12px);
+        }
+
+        .card-mixed-blend-reverse {
+            background: linear-gradient(225deg, rgba(45, 61, 51, 0.88) 0%, rgba(105, 38, 65, 0.88) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(12px);
+        }
+        
+        .gold-border {
+            border: 1px solid rgba(212, 175, 55, 0.5);
+        }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fff3d1 0%, #d4af37 55%, #aa7c11 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-text {
+            color: #d4af37;
+        }
+        
+        /* Shimmer Ornament Emas */
+        .shimmer-ornament {
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+            height: 1px;
+            width: 100%;
+        }
+
+        /* Canvas Floating Particles */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-mixed-palette min-h-screen relative selection:bg-[#d4af37] selection:text-black">
+
+    <!-- Canvas Partikel (50% Kelopak Mawar Terang & 50% Daun Matcha) -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Tombol Musik & Audio Background -->
+    <audio id="bg-music" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
+    </audio>
+    <button id="music-toggle" onclick="toggleMusic()" class="fixed bottom-6 right-6 z-50 bg-[#2c3832] gold-border text-[#d4af37] w-12 h-12 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition duration-300">
+        <span id="music-icon" class="text-xl animate-spin">🎵</span>
+    </button>
+
+    <!-- HALAMAN COVER / SAMPUL -->
+    <div id="cover-section" class="relative z-30 min-h-screen flex flex-col items-center justify-between p-6 text-center bg-gradient-to-b from-[#752848]/95 via-[#2c3832]/95 to-[#1c2420]">
+        <div class="mt-8">
+            <p class="text-xs tracking-[0.4em] uppercase text-emerald-200 font-medium">Walimatul 'Ursy</p>
+            <div class="my-2 text-yellow-500/80 tracking-widest text-sm">❧ ❦ ❧</div>
+            <h1 class="font-serif-custom text-4xl md:text-5xl font-bold mt-2 gold-gradient-text">Romeo & Juliet</h1>
+        </div>
+
+        <div class="my-auto w-full max-w-sm card-mixed-blend p-6 rounded-3xl">
+            <p class="text-xs text-rose-200 mb-2 uppercase tracking-wider font-medium">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
+            <div id="guest-name" class="py-3 px-4 bg-[#232d27] rounded-xl border border-[#d4af37]/40 text-yellow-100 font-semibold tracking-wide text-sm shadow-inner">
+                Tamu Undangan
+            </div>
+            <p class="text-[11px] text-gray-200 mt-4 leading-relaxed">
+                Tanpa Mengurangi Rasa Hormat, Kami Mengundang Anda Untuk Hadir Di Hari Bahagia Kami.
+            </p>
+            <button onclick="bukaUndangan()" class="mt-6 w-full py-3.5 px-6 bg-gradient-to-r from-[#993b61] to-[#3f5448] hover:opacity-90 text-yellow-100 font-medium rounded-full shadow-lg border border-[#d4af37]/60 transition duration-300 flex items-center justify-center gap-2 text-sm tracking-wider">
+                <span>💌</span> Buka Undangan
+            </button>
+        </div>
+
+        <div class="mb-4 text-xs text-emerald-200 tracking-widest uppercase font-medium">
+            Blended Rose & Matcha Theme
+        </div>
+    </div>
+
+    <!-- KONTEN UTAMA UNDANGAN -->
+    <div id="main-content" class="hidden relative z-20 max-w-md mx-auto min-h-screen shadow-2xl border-x border-[#d4af37]/30 pb-24 bg-[#26302a]/90 backdrop-blur-md">
+        
+        <!-- HEADER UTAMA -->
+        <section class="text-center pt-14 pb-8 px-6">
+            <p class="text-xs tracking-[0.35em] uppercase text-emerald-300 font-semibold">The Wedding Of</p>
+            <div class="my-3 text-yellow-500/80 text-sm">❧ ❦ ❧</div>
+            <h2 class="font-serif-custom text-4xl font-bold mt-1 gold-gradient-text">Romeo & Juliet</h2>
+            <p class="text-sm text-rose-200 mt-2 font-medium">Sabtu, 24 Oktober 2026</p>
+            <div class="shimmer-ornament my-4"></div>
+
+            <!-- Foto Utama Oval dengan Bingkai Campuran Gradien -->
+            <div class="mt-6 relative inline-block p-1.5 bg-gradient-to-tr from-[#b34773] via-[#d4af37] to-[#476654] rounded-full shadow-2xl">
+                <div class="w-56 h-56 rounded-full overflow-hidden bg-[#232d27] flex items-center justify-center">
+                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600" alt="Romeo & Juliet" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </section>
+
+        <!-- HITUNG MUNDUR (COUNTDOWN) - Card Mixed Blend -->
+        <section class="px-6 py-4">
+            <div class="card-mixed-blend p-5 rounded-2xl text-center shadow-lg">
+                <h3 class="font-serif-custom text-xl font-semibold gold-text mb-4">Menghitung Hari Bahagia</h3>
+                <div class="grid grid-cols-4 gap-2 text-gray-100">
+                    <div class="bg-[#232d27] p-2.5 rounded-xl border border-[#d4af37]/30">
+                        <span id="days" class="block text-xl font-bold font-serif-custom gold-text">03</span>
+                        <span class="text-[10px] uppercase tracking-wider text-gray-400">Hari</span>
+                    </div>
+                    <div class="bg-[#232d27] p-2.5 rounded-xl border border-[#d4af37]/30">
+                        <span id="hours" class="block text-xl font-bold font-serif-custom gold-text">15</span>
+                        <span class="text-[10px] uppercase tracking-wider text-gray-400">Jam</span>
+                    </div>
+                    <div class="bg-[#232d27] p-2.5 rounded-xl border border-[#d4af37]/30">
+                        <span id="minutes" class="block text-xl font-bold font-serif-custom gold-text">34</span>
+                        <span class="text-[10px] uppercase tracking-wider text-gray-400">Menit</span>
+                    </div>
+                    <div class="bg-[#232d27] p-2.5 rounded-xl border border-[#d4af37]/30">
+                        <span id="seconds" class="block text-xl font-bold font-serif-custom gold-text">21</span>
+                        <span class="text-[10px] uppercase tracking-wider text-gray-400">Detik</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- KUTIPAN / AYAT SUCI - Card Mixed Blend Reverse -->
+        <section class="px-6 py-8 text-center">
+            <div class="card-mixed-blend-reverse p-6 rounded-2xl relative shadow-lg">
+                <span class="text-4xl text-[#d4af37]/40 font-serif absolute top-2 left-4">“</span>
+                <p class="text-xs md:text-sm italic text-gray-200 leading-relaxed px-2 font-serif-custom">
+                    "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang."
+                </p>
+                <span class="text-4xl text-[#d4af37]/40 font-serif absolute bottom-0 right-4">”</span>
+                <p class="mt-4 text-xs font-semibold tracking-wider gold-text">QS. AR-RUM: 21</p>
+            </div>
+        </section>
+
+        <!-- PROFIL MEMPELAI -->
+        <section class="px-6 py-8 text-center">
+            <h3 class="font-serif-custom text-2xl font-bold mb-1 gold-gradient-text">Mempelai Pria & Wanita</h3>
+            <p class="text-xs text-emerald-300 mb-8 uppercase tracking-widest">Dengan Ridho Allah SWT</p>
+
+            <!-- Mempelai Pria -->
+            <div class="card-mixed-blend p-6 rounded-2xl mb-6 shadow-lg border-l-4 border-l-[#b34773]">
+                <div class="w-32 h-32 mx-auto rounded-full overflow-hidden mb-4 border-2 border-[#d4af37]/60 shadow-md">
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400" alt="Romeo" class="w-full h-full object-cover">
+                </div>
+                <h4 class="font-serif-custom text-2xl font-bold text-rose-100">Romeo Pratama, S.T.</h4>
+                <p class="text-xs text-gray-300 mt-1">Putra Pertama Dari:<br>Bpk. H. Hendra Pratama & Ibu Hj. Ningsih</p>
+                <div class="mt-3 inline-flex items-center gap-1 text-xs text-[#d4af37] bg-[#232d27] px-3 py-1 rounded-full border border-[#d4af37]/40">
+                    <span>ig:</span> @romeo.pratama
+                </div>
+            </div>
+
+            <div class="my-6 text-3xl font-serif-custom gold-text">❧ ❦ ❧</div>
+
+            <!-- Mempelai Wanita -->
+            <div class="card-mixed-blend-reverse p-6 rounded-2xl shadow-lg border-l-4 border-l-[#476654]">
+                <div class="w-32 h-32 mx-auto rounded-full overflow-hidden mb-4 border-2 border-[#d4af37]/60 shadow-md">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" alt="Juliet" class="w-full h-full object-cover">
+                </div>
+                <h4 class="font-serif-custom text-2xl font-bold text-emerald-100">Juliet Rahma, S.Ked.</h4>
+                <p class="text-xs text-gray-300 mt-1">Putri Kedua Dari:<br>Bpk. Dr. Bambang Wijaya & Ibu Hj. Anita</p>
+                <div class="mt-3 inline-flex items-center gap-1 text-xs text-[#d4af37] bg-[#232d27] px-3 py-1 rounded-full border border-[#d4af37]/40">
+                    <span>ig:</span> @juliet.rahma
+                </div>
+            </div>
+        </section>
+
+        <!-- RANGKAIAN ACARA -->
+        <section class="px-6 py-6">
+            <div class="text-center mb-8">
+                <h3 class="font-serif-custom text-2xl font-bold gold-gradient-text">Rangkaian Acara</h3>
+                <p class="text-xs text-emerald-300 tracking-widest uppercase mt-1">Waktu & Tempat Pelaksanaan</p>
+            </div>
+
+            <!-- Akad Nikah -->
+            <div class="card-mixed-blend p-6 rounded-2xl mb-6 text-center shadow-lg">
+                <div class="w-10 h-10 mx-auto bg-[#d4af37]/25 rounded-full flex items-center justify-center text-[#d4af37] mb-3 text-lg border border-[#d4af37]/40">💍</div>
+                <h4 class="font-serif-custom text-xl font-bold text-yellow-100">Akad Nikah</h4>
+                <p class="text-xs gold-text font-medium mt-1">Sabtu, 24 Oktober 2026</p>
+                <p class="text-xs text-gray-300 mt-2">🕒 08.00 - 10.00 WIB</p>
+                <p class="text-xs text-gray-300 mt-1">📍 Masjid Agung Sunda Kelapa</p>
+                <p class="text-[11px] text-gray-400 mt-1">Jl. Taman Sunda Kelapa No.16, Menteng, Jakarta Pusat</p>
+            </div>
+
+            <!-- Resepsi -->
+            <div class="card-mixed-blend-reverse p-6 rounded-2xl text-center shadow-lg">
+                <div class="w-10 h-10 mx-auto bg-[#d4af37]/25 rounded-full flex items-center justify-center text-[#d4af37] mb-3 text-lg border border-[#d4af37]/40">🥂</div>
+                <h4 class="font-serif-custom text-xl font-bold text-yellow-100">Resepsi Pernikahan</h4>
+                <p class="text-xs gold-text font-medium mt-1">Sabtu, 24 Oktober 2026</p>
+                <p class="text-xs text-gray-300 mt-2">🕒 11.00 - 14.00 WIB</p>
+                <p class="text-xs text-gray-300 mt-1">📍 Grand Ballroom Hotel Indonesia</p>
+                <p class="text-[11px] text-gray-400 mt-1">Jl. M.H. Thamrin No.1, Jakarta Pusat</p>
+            </div>
+        </section>
+
+        <!-- GALERI FOTO & LIGHTBOX -->
+        <section class="px-6 py-6">
+            <div class="text-center mb-6">
+                <h3 class="font-serif-custom text-2xl font-bold gold-gradient-text">Galeri Foto</h3>
+                <p class="text-xs text-emerald-300 uppercase tracking-widest mt-1">Momen Bahagia Kami</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="overflow-hidden rounded-xl border border-[#d4af37]/40 h-36 cursor-pointer hover:opacity-90 transition card-mixed-blend shadow" onclick="openLightbox(this.querySelector('img').src)">
+                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover">
+                </div>
+                <div class="overflow-hidden rounded-xl border border-[#d4af37]/40 h-36 cursor-pointer hover:opacity-90 transition card-mixed-blend-reverse shadow" onclick="openLightbox(this.querySelector('img').src)">
+                    <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover">
+                </div>
+                <div class="overflow-hidden rounded-xl border border-[#d4af37]/40 h-36 cursor-pointer hover:opacity-90 transition card-mixed-blend shadow" onclick="openLightbox(this.querySelector('img').src)">
+                    <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover">
+                </div>
+                <div class="overflow-hidden rounded-xl border border-[#d4af37]/40 h-36 cursor-pointer hover:opacity-90 transition card-mixed-blend-reverse shadow" onclick="openLightbox(this.querySelector('img').src)">
+                    <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </section>
+
+        <!-- KOTAK HADIAH / AMPLOP DIGITAL -->
+        <section class="px-6 py-6 text-center">
+            <div class="text-center mb-6">
+                <h3 class="font-serif-custom text-2xl font-bold gold-gradient-text">Kado Pernikahan</h3>
+                <p class="text-xs text-emerald-300 uppercase tracking-widest mt-1">Amplop Digital</p>
+            </div>
+            <div class="card-mixed-blend p-6 rounded-2xl shadow-lg space-y-4">
+                <p class="text-xs text-gray-300">Doa restu Anda merupakan karunia yang sangat berarti bagi kami. Dan jika memberi adalah ungkapan tanda kasih, Anda dapat mengirimkannya melalui:</p>
+                <div class="bg-[#232d27] p-4 rounded-xl border border-[#d4af37]/40">
+                    <p class="text-xs font-bold text-yellow-300">BANK BCA</p>
+                    <p class="text-sm font-mono tracking-wider text-white mt-1">1234567890</p>
+                    <p class="text-[11px] text-gray-400 mt-1">a.n. Romeo Pratama</p>
+                    <button onclick="navigator.clipboard.writeText('1234567890'); alert('Nomor rekening berhasil disalin!');" class="mt-3 py-1.5 px-4 bg-gradient-to-r from-[#993b61] to-[#3f5448] hover:opacity-90 text-yellow-100 text-[11px] rounded-lg transition border border-[#d4af37]/40 shadow">
+                        📋 Salin Nomor Rekening
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- BUKU TAMU INTERAKTIF & RSVP -->
+        <section class="px-6 py-6">
+            <div class="text-center mb-6">
+                <h3 class="font-serif-custom text-2xl font-bold gold-gradient-text">Buku Tamu & Ucapan</h3>
+                <p class="text-xs text-emerald-300 uppercase tracking-widest mt-1">Konfirmasi Kehadiran & Doa</p>
+            </div>
+
+            <div class="card-mixed-blend-reverse p-5 rounded-2xl mb-6 shadow-lg">
+                <form id="guestbook-form" onsubmit="submitGuestbook(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Nama Anda</label>
+                        <input type="text" id="sender-name" required class="w-full bg-[#232d27] border border-[#d4af37]/40 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#d4af37]" placeholder="Masukkan nama...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Konfirmasi Kehadiran (RSVP)</label>
+                        <select id="sender-attendance" class="w-full bg-[#232d27] border border-[#d4af37]/40 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+                            <option value="Hadir">Hadir</option>
+                            <option value="Berhalangan">Berhalangan Hadir</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Ucapan / Doa Restu</label>
+                        <textarea id="sender-message" required rows="3" class="w-full bg-[#232d27] border border-[#d4af37]/40 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#d4af37]" placeholder="Tuliskan doa restu..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-[#3f5448] to-[#993b61] hover:opacity-90 text-yellow-100 font-medium rounded-xl border border-[#d4af37]/50 text-xs shadow transition">
+                        Kirim Ucapan & RSVP
+                    </button>
+                </form>
+            </div>
+
+            <!-- Daftar Pesan Tersimpan -->
+            <div id="guestbook-container" class="space-y-3 max-h-60 overflow-y-auto pr-1">
+                <!-- Data akan dimuat melalui JavaScript -->
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="text-center py-10 px-6 border-t border-[#d4af37]/30 mt-6 bg-[#1a221e]">
+            <div class="text-yellow-500/80 mb-2">❧ ❦ ❧</div>
+            <h4 class="font-serif-custom text-2xl gold-gradient-text font-bold">Romeo & Juliet</h4>
+            <p class="text-xs text-gray-400 mt-2">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.</p>
+            <p class="text-[10px] text-[#d4af37]/60 mt-6">© 2026 Wedding Invitation. All Rights Reserved.</p>
+        </footer>
+
+    </div>
+
+    <!-- MODAL LIGHTBOX GALERI -->
+    <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeLightbox()">
+        <span class="absolute top-6 right-6 text-white text-3xl cursor-pointer">&times;</span>
+        <img id="lightbox-img" class="max-w-full max-h-[85vh] rounded-lg border-2 border-[#d4af37] object-contain shadow-2xl">
+    </div>
+
+    <!-- SCRIPT INTERAKSI & SISTEM -->
+    <script>
+        // Ambil parameter URL untuk Nama Tamu (Contoh: ?to=Bapak+Budi)
+        const urlParams = new URLSearchParams(window.location.search);
+        const guestParam = urlParams.get('to');
+        if (guestParam) {
+            document.getElementById('guest-name').innerText = decodeURIComponent(guestParam);
+        }
+
+        // Buka Undangan & Putar Musik
+        function bukaUndangan() {
+            const cover = document.getElementById('cover-section');
+            const mainContent = document.getElementById('main-content');
+            const music = document.getElementById('bg-music');
+            
+            music.play().catch(e => console.log("Audio autoplay diblokir browser"));
+            isMusicPlaying = true;
+
+            cover.style.opacity = '0';
+            cover.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                cover.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 500);
+        }
+
+        // Toggle Musik
+        let isMusicPlaying = false;
+        function toggleMusic() {
+            const music = document.getElementById('bg-music');
+            const icon = document.getElementById('music-icon');
+            if (isMusicPlaying) {
+                music.pause();
+                isMusicPlaying = false;
+                icon.classList.remove('animate-spin');
+                icon.style.opacity = '0.5';
+            } else {
+                music.play();
+                isMusicPlaying = true;
+                icon.classList.add('animate-spin');
+                icon.style.opacity = '1';
+            }
+        }
+
+        // Lightbox Galeri
+        function openLightbox(src) {
+            const modal = document.getElementById('lightbox-modal');
+            const img = document.getElementById('lightbox-img');
+            img.src = src;
+            modal.classList.remove('hidden');
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox-modal').classList.add('hidden');
+        }
+
+        // Buku Tamu Interaktif (LocalStorage)
+        function loadGuestbook() {
+            const container = document.getElementById('guestbook-container');
+            let messages = JSON.parse(localStorage.getItem('wedding_guestbook')) || [
+                { name: 'Siti Rahma', attendance: 'Hadir', text: 'Barakallah, semoga menjadi keluarga sakinah, mawaddah, warahmah!' },
+                { name: 'Ahmad Fauzi', attendance: 'Hadir', text: 'Selamat berbahagia Romeo & Juliet! Lancar sampai hari H.' }
+            ];
+
+            container.innerHTML = '';
+            messages.forEach((msg, idx) => {
+                const cardStyle = idx % 2 === 0 ? 'card-mixed-blend' : 'card-mixed-blend-reverse';
+                const badgeColor = msg.attendance === 'Hadir' ? 'text-emerald-300 bg-emerald-950/70' : 'text-rose-300 bg-rose-950/70';
+                const item = document.createElement('div');
+                item.className = `${cardStyle} p-3.5 rounded-xl border border-[#d4af37]/30 text-xs shadow-sm`;
+                item.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-semibold text-yellow-100">${msg.name}</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] ${badgeColor}">${msg.attendance}</span>
+                    </div>
+                    <p class="text-gray-300 mt-1">${msg.text}</p>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function submitGuestbook(e) {
+            e.preventDefault();
+            const name = document.getElementById('sender-name').value;
+            const attendance = document.getElementById('sender-attendance').value;
+            const text = document.getElementById('sender-message').value;
+
+            let messages = JSON.parse(localStorage.getItem('wedding_guestbook')) || [
+                { name: 'Siti Rahma', attendance: 'Hadir', text: 'Barakallah, semoga menjadi keluarga sakinah, mawaddah, warahmah!' },
+                { name: 'Ahmad Fauzi', attendance: 'Hadir', text: 'Selamat berbahagia Romeo & Juliet! Lancar sampai hari H.' }
+            ];
+
+            messages.unshift({ name, attendance, text });
+            localStorage.setItem('wedding_guestbook', JSON.stringify(messages));
+
+            document.getElementById('guestbook-form').reset();
+            loadGuestbook();
+        }
+        loadGuestbook();
+
+        // Canvas Partikel: 50% Kelopak Mawar Terang & 50% Daun Matcha
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particles = [];
+        const particleCount = 30;
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 6 + 4,
+                speedY: Math.random() * 1 + 0.5,
+                speedX: Math.random() * 1 - 0.5,
+                rotation: Math.random() * 360,
+                rotSpeed: Math.random() * 2 - 1,
+                type: i % 2 === 0 ? 'rose' : 'matcha'
+            });
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.y += p.speedY;
+                p.x += p.speedX + Math.sin(p.y / 30) * 0.3;
+                p.rotation += p.rotSpeed;
+
+                if (p.y > canvas.height) {
+                    p.y = -10;
+                    p.x = Math.random() * canvas.width;
+                }
+
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate((p.rotation * Math.PI) / 180);
+                
+                // Warna Pink Terang & Matcha Seimbang 50/50
+                ctx.fillStyle = p.type === 'rose' ? 'rgba(235, 110, 145, 0.65)' : 'rgba(95, 145, 115, 0.65)';
+                ctx.beginPath();
+                ctx.ellipse(0, 0, p.size, p.size / 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // Countdown Timer
+        const countDownDate = new Date("Oct 24, 2026 08:00:00").getTime();
+        setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = String(days).padStart(2, '0');
+            document.getElementById("hours").innerText = String(hours).padStart(2, '0');
+            document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
+        }, 1000);
+    </script>
+</body>
+</html>
